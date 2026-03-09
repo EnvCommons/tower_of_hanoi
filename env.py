@@ -1,4 +1,5 @@
 import textarena as ta
+import re
 from typing import List
 from pydantic import BaseModel, field_validator
 from openreward.environments import Environment, JSONObject, ToolOutput, TextBlock, tool
@@ -70,6 +71,23 @@ class TowerOfHanoiEnvironment(Environment):
                 })
         return tasks
 
+    def _format_observation(self, observation) -> str:
+        if isinstance(observation, str):
+            match = None
+            for m in re.finditer(r'^\[(?!GAME\])[^\]]+\].*$', observation, re.MULTILINE):
+                match = m
+            if match:
+                return observation[match.end():].lstrip('\n')
+            return observation
+        if isinstance(observation, list):
+            if not observation:
+                return ""
+            last = observation[-1]
+            if isinstance(last, tuple) and len(last) >= 2:
+                return str(last[1])
+            return str(last)
+        return str(observation)
+
     def _map_reward(self, raw_reward: float) -> float:
         """Map TextArena rewards (typically -1 to 1) to 0-1 range."""
         return max(0.0, min(1.0, (raw_reward + 1.0) / 2.0))
@@ -77,7 +95,7 @@ class TowerOfHanoiEnvironment(Environment):
     async def get_prompt(self) -> List[TextBlock]:
         self.ta_env.reset(num_players=1, seed=self.config.seed)
         _, observation = self.ta_env.get_observation()
-        obs_text = observation if isinstance(observation, str) else (str(observation[-1][1]) if isinstance(observation, list) and observation and isinstance(observation[-1], tuple) and len(observation[-1]) >= 2 else str(observation))
+        obs_text = self._format_observation(observation)
 
         prompt = (
             f"You are playing Tower of Hanoi.\n\n"
@@ -126,7 +144,7 @@ class TowerOfHanoiEnvironment(Environment):
             )
 
         _, observation = self.ta_env.get_observation()
-        obs_text = observation if isinstance(observation, str) else (str(observation[-1][1]) if isinstance(observation, list) and observation and isinstance(observation[-1], tuple) and len(observation[-1]) >= 2 else str(observation))
+        obs_text = self._format_observation(observation)
 
         return ToolOutput(
             blocks=[TextBlock(text=obs_text)],
