@@ -88,10 +88,6 @@ class TowerOfHanoiEnvironment(Environment):
             return str(last)
         return str(observation)
 
-    def _map_reward(self, raw_reward: float) -> float:
-        """Map TextArena rewards (typically -1 to 1) to 0-1 range."""
-        return max(0.0, min(1.0, (raw_reward + 1.0) / 2.0))
-
     async def get_prompt(self) -> List[TextBlock]:
         self.ta_env.reset(num_players=1, seed=self.config.seed)
         _, observation = self.ta_env.get_observation()
@@ -125,8 +121,7 @@ class TowerOfHanoiEnvironment(Environment):
         if done:
             self.game_done = True
             rewards, game_info = self.ta_env.close()
-            raw = rewards.get(0, 0.0) if isinstance(rewards, dict) else float(rewards)
-            reward = self._map_reward(raw)
+            reward = rewards.get(0, 0.0) if isinstance(rewards, dict) else float(rewards)
 
             reason = ""
             if isinstance(game_info, dict) and 0 in game_info:
