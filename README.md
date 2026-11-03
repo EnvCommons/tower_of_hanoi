@@ -1,6 +1,6 @@
 # TowerOfHanoi
 
-[![OpenReward Environment](https://img.shields.io/badge/%E2%AD%90%20OpenReward-Environment-f7e6cc)](https://openreward.ai/GeneralReasoning/TowerOfHanoi)
+[![⭐ OpenReward Environment](https://img.shields.io/badge/%E2%AD%90%20OpenReward-Environment-f7e6cc)](https://openreward.ai/GeneralReasoning/TowerOfHanoi)
 
 ## Description
 
@@ -19,11 +19,11 @@ TowerOfHanoi does not require a sandbox. It has minimal compute requirements.
 
 ## License
 
-[MIT](https://github.com/LeonGuertler/TextArena/blob/main/LICENSE).
+[MIT](https://opensource.org/licenses/MIT).
 
 ## Tasks
 
-There are two splits: train (750 tasks) and test (750 tasks). Each split contains 50 tasks across each of 15 variants:
+There are 750 tasks in the `train` split and 750 in `test`. Each split contains 50 tasks for each of 15 variants:
 
 - **TowerOfHanoi-v0**
 - **TowerOfHanoi-v0-extreme**
@@ -41,7 +41,7 @@ There are two splits: train (750 tasks) and test (750 tasks). Each split contain
 - **TowerOfHanoi-v0-raw**
 - **TowerOfHanoi-v0-train**
 
-Each task is seeded for reproducibility.
+Each task is seeded for reproducibility: `train` uses seeds 0–49 and `test` uses seeds 10000–10049 for each variant.
 
 ## Reward Structure
 
@@ -65,7 +65,7 @@ TowerOfHanoi is a multi-turn environment.
 
 ## Environment Difficulty
 
-Medium to Very Hard. Tower of Hanoi requires planning, recursion understanding, and optimal move sequencing. Difficulty increases significantly with more disks (exponential growth in optimal solution length).
+Tower of Hanoi requires planning and move sequencing. Difficulty increases with the number of disks, since the optimal solution length grows exponentially (2^n − 1 moves for n disks).
 
 ## Other Environment Requirements
 
@@ -78,11 +78,13 @@ Agents in TowerOfHanoi interact only with a mathematical puzzle and have no acce
 ## Citations
 
 ```bibtex
-@software{textarena2024,
-  author    = {Guertler, Leon and Banting, Wilfried and Pignatelli, Eduardo},
-  title     = {TextArena},
-  year      = {2024},
-  publisher = {GitHub},
-  url       = {https://github.com/LeonGuertler/TextArena}
+@misc{guertler2025textarena,
+    title={TextArena},
+    author={Leon Guertler and Bobby Cheng and Simon Yu and Bo Liu and Leshem Choshen and Cheston Tan},
+    year={2025},
+    eprint={2504.11442},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    url={https://arxiv.org/abs/2504.11442},
 }
 ```
